@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ message }}</h1>
+<h1>Home Page</h1>
+<h5>{{ username }}</h5>
+<h5>{{ email }}</h5>
+
+{% if score > 85 %}
+<h5>Grade A</h5>
+{% elif score > 75 %}
+<h5>Grade B</h5>
+{% endif %}
+
+<ul>
+    {% for a in activities %}
+    <li>{{ a }}</li>
+    {% endfor %}
+</ul>
+<h2>Real Time Clock (AJAX)</h2>
+<h1 id="datetime">Loading...</h1>
+
+<script>
+    function loadDateTime() {
+        fetch('/api/servertime')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('datetime').innerText = data.datetime;
+            })
+            .catch(error => console.error(error));
+
+    }
+    setInterval(loadDateTime, 1000);
+    loadDateTime();
+</script>
+{% endblock %}

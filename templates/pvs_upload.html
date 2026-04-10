@@ -1,0 +1,37 @@
+{% extends "master.html" %}
+
+{% block content %}
+<h2 class="mt-4">Pay-Slip Upload</h2>
+<input type="file" id="slip">
+<button class="btn btn-primary" onclick="uploadSlip()">Upload</button>
+<div id="loading" style="display:none;">Uploading...</div>
+<div id="result"></div>
+
+<script>
+let ocrData = null;
+
+async function uploadSlip() {
+  let file = document.getElementById("slip").files[0]
+  let formData = new FormData()
+  formData.append("file", file)
+  // show loading
+  document.getElementById("loading").style.display = "block"
+  let res = await fetch("/api/pvs/upload-ocr", {
+    method: "POST",
+    body: formData
+  })
+  ocrData = await res.json()
+  // hide loading
+  document.getElementById("loading").style.display = "none"
+  showResult(ocrData)
+}
+function showResult(data) {
+  let html = `
+    <p><b>Amount:</b> ${data.amount}</p>
+    <p><b>DateTime:</b> ${data.datetime}</p>
+    <p><b>Raw Text:</b> ${data.text}</p>
+  `
+  document.getElementById("result").innerHTML = html
+}
+</script>
+{% endblock %}
