@@ -316,3 +316,15 @@ def get_current_user(request: Request):
     if not user:
         return RedirectResponse("/login", status_code=303)
     return user
+
+@app.get('/api/hello')
+def hello_api():
+    return {'message': 'API Works!'}
+
+@app.get('/api/grade')
+def grade_api(score:float = None):
+    if score >= 85:
+        return {'grade': 'A'}
+    elif score >= 75 and score < 85:
+        return {'grade': 'B'}
+    return {'grade': 'F'}
